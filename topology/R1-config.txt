@@ -1,0 +1,147 @@
+R1#show running-config
+Building configuration...
+
+Current configuration : 2122 bytes
+!
+upgrade fpd auto
+version 15.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+aqm-register-fnf
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name lab.local
+no ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username admin privilege 15 secret 5 $1$d.qa$32jBUaOn38iiUatNGAuzD/
+!
+redundancy
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ no ip address
+ ip nat inside
+ ip virtual-reassembly in
+ no ip route-cache
+ duplex half
+!
+interface FastEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ no ip route-cache
+!
+interface FastEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ no ip route-cache
+!
+interface FastEthernet0/0.30
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ no ip route-cache
+!
+interface FastEthernet0/0.99
+ encapsulation dot1Q 99
+ ip address 192.168.99.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ no ip route-cache
+!
+interface FastEthernet1/0
+ ip address 192.168.19.3 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ no ip route-cache
+ duplex half
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list 1 interface FastEthernet1/0 overload
+ip route 0.0.0.0 0.0.0.0 192.168.19.2
+ip route 10.10.10.0 255.255.255.0 192.168.19.2
+!
+no cdp log mismatch duplex
+!
+!
+access-list 1 permit any
+!
+control-plane
+!
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+end
+
